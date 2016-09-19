@@ -26,6 +26,7 @@ import static org.fenixedu.cms.ui.SearchUtils.searchPages;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.spring.portal.BennuSpringController;
@@ -69,11 +70,17 @@ public class AdminPages {
 
     @RequestMapping(value = "{slug}", method = RequestMethod.GET)
     public String pages(Model model, @PathVariable String slug, @RequestParam(required = false) String query,
-                    @RequestParam(required = false, defaultValue = "1") int currentPage) {
+                    @RequestParam(required = false, defaultValue = "1") int currentPage, @RequestParam(required = false) JsonObject filters) {
         Site site = Site.fromSlug(slug);
         AdminSites.canEdit(site);
         ensureCanDoThis(site, Permission.SEE_PAGES);
         Collection<Page> allPages = Strings.isNullOrEmpty(query) ? getStaticPages(site) : searchPages(getStaticPages(site), query);
+        if(filters!= null && !filters.isJsonNull()){
+            allPages = allPages.stream()
+                    .filter(p-> filterPublished(p,filters.get("published")))
+                    .filter(p-> filterMenu(p,filters.get("menu")))
+                    .collect(Collectors.toSet());
+        }
         SearchUtils.Partition<Page> partition =
                         new SearchUtils.Partition<>(allPages, Page.CREATION_DATE_COMPARATOR, PER_PAGE, currentPage);
 
@@ -82,6 +89,16 @@ public class AdminPages {
         model.addAttribute("partition", partition);
         model.addAttribute("pages", partition.getItems());
         return "fenixedu-cms/pages";
+    }
+
+
+    private boolean filterPublished(Page p, JsonElement published) {
+        return published == null ||
+               p.getPublished() == published.getAsBoolean();
+    }
+
+    private boolean filterMenu(Page p, JsonElement menu) {
+        return menu == null || p.getMenuItemsSet().stream().anyMatch(mi->mi.getMenu().getExternalId().equals(menu.getAsString()));
     }
 
     @RequestMapping(value = "{slugSite}/{slugPage}/edit", method = RequestMethod.GET)
