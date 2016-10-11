@@ -66,35 +66,37 @@ public class CMSRenderer {
 
     private static final Set<RenderingPageHandler> HANDLERS = new HashSet<>();
 
-    private final PebbleEngine engine = new PebbleEngine(new ClasspathLoader() {
-        @Override
-        public Reader getReader(String templateName) throws LoaderException {
-            String[] parts = templateName.split("/", 2);
-
-            if (parts.length != 2) {
-                throw new IllegalArgumentException("Not a valid name: " + templateName);
-            }
-            CMSTheme theme = CMSTheme.forType(parts[0]);
-            if (theme == null) {
-                throw new IllegalArgumentException("Theme " + parts[0] + " not found!");
-            }
-
-            byte[] bytes = theme.contentForPath(parts[1]);
-            if (bytes == null) {
-                throw new IllegalArgumentException("Theme " + parts[0] + " does not contain resource '" + parts[1] + '"');
-            }
-            return new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8);
-        }
-    });
+    private final PebbleEngine engine;
 
     public CMSRenderer() {
-        engine.addExtension(new CMSExtensions());
+        PebbleEngine.Builder engBuilder = new PebbleEngine.Builder()
+                .loader(new ClasspathLoader() {
+            @Override
+            public Reader getReader(String templateName) throws LoaderException {
+                String[] parts = templateName.split("/", 2);
+
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Not a valid name: " + templateName);
+                }
+                CMSTheme theme = CMSTheme.forType(parts[0]);
+                if (theme == null) {
+                    throw new IllegalArgumentException("Theme " + parts[0] + " not found!");
+                }
+
+                byte[] bytes = theme.contentForPath(parts[1]);
+                if (bytes == null) {
+                    throw new IllegalArgumentException("Theme " + parts[0] + " does not contain resource '" + parts[1] + '"');
+                }
+                return new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8);
+            }
+        }).extension(new CMSExtensions());
         if (CMSConfigurationManager.isInThemeDevelopmentMode()) {
-            engine.setTemplateCache(null);
+            engBuilder.templateCache(null);
             logger.info("CMS Theme Development Mode enabled!");
         } else {
-            engine.setTemplateCache(CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build());
+            engBuilder.templateCache(CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build());
         }
+        engine=engBuilder.build();
     }
 
     void renderCMSPage(final HttpServletRequest req, HttpServletResponse res, Site sites, String pageSlug)
