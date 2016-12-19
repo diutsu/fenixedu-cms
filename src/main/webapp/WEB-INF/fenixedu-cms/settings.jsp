@@ -38,26 +38,35 @@ ${portal.toolkit()}
 
     <div class="form-group">
         <label class="control-label">Themes managers:</label>
-        <input bennu-group allow="public,users,managers,custom" name="themesManagers" type="text" value='${cmsSettings.themesManagers.toGroup().expression}'/>
+        <input bennu-group allow="users,managers,custom" name="themesManagers" type="text" value='${cmsSettings.themesManagers.toGroup().expression}'/>
         <p class="help-block">Users that are allowed to manage <a href="${pageContext.request.contextPath}/cms/themes">themes</a>.</p>
     </div>
 
     <div class="form-group">
         <label class="control-label">Roles managers:</label>
-        <input bennu-group allow="public,users,managers,custom" name="rolesManagers" type="text" value='${cmsSettings.rolesManagers.toGroup().expression}'/>
+        <input bennu-group allow="users,managers,custom" name="rolesManagers" type="text" value='${cmsSettings.rolesManagers.toGroup().expression}'/>
         <p class="help-block">Users that are allowed to manage <a href="${pageContext.request.contextPath}/cms/permissions">roles</a>.</p>
     </div>
 
     <div class="form-group">
         <label class="control-label">Folders managers:</label>
-        <input bennu-group allow="public,users,managers,custom" name="foldersManagers" type="text" value='${cmsSettings.foldersManagers.toGroup().expression}'/>
+        <input bennu-group allow="users,managers,custom" name="foldersManagers" type="text" value='${cmsSettings.foldersManagers.toGroup().expression}'/>
         <p class="help-block">Users that are allowed to manage <a href="${pageContext.request.contextPath}/cms/folders">folders</a>.</p>
     </div>
 
     <div class="form-group">
-        <label class="control-label">Global Settings:</label>
-        <input bennu-group allow="public,users,managers,custom" name="settingsManagers" type="text" value='${cmsSettings.settingsManagers.toGroup().expression}'/>
-        <p class="help-block">Users that are allowed to global settings such setting the <a href="${pageContext.request.contextPath}/cms/sites">default site</a> or <a href="${pageContext.request.contextPath}/cms/sites/new">create new sites</a></p>
+        <label class="control-label">Settings:</label>
+        <input bennu-group allow="users,managers,custom" name="settingsManagers" type="text" value='${cmsSettings.settingsManagers.toGroup().expression}'/>
+        <p class="help-block">Users that are allowed to global settings, such setting the <a
+                href="${pageContext.request.contextPath}/cms/sites">default site</a> or <a href="${pageContext.request.contextPath}/cms/sites/new">create new sites</a></p>
+    </div>
+
+
+    <div class="form-group"><label class="control-label">Global Settings:</label>
+        <input bennu-group allow="custom" name="globalManagers" type="text"
+               value='${cmsSettings.globalManagers.toGroup().expression}'/>
+        <p class="help-block">Overriding permission, these users have the ability to admin all sites and cms settings. You
+            have been warned!</p>
     </div>
     
 </form>

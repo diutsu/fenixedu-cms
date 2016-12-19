@@ -31,10 +31,8 @@ import pt.ist.fenixframework.FenixFramework;
 public class CmsBootstrapper {
 
     @Bootstrap
-    public static void bootstrapCms() {
-        if (Bennu.getInstance().getCmsSettings() == null) {
-            FenixFramework.atomic(() -> Bennu.getInstance().setCmsSettings(new CmsSettings()));
-        }
+    public static void bootstrapCms() throws Exception {
+        FenixFramework.atomic(CmsSettings::getInstance);
         DefaultRoles.getInstance().init();
     }
 

@@ -453,16 +453,18 @@ public class AdminSites {
     }
 
     @RequestMapping(value = "cmsSettings", method = RequestMethod.POST)
-    public RedirectView editSettings(@RequestParam(required = false) String themesManagers, @RequestParam(required = false) String rolesManagers,
-                                     @RequestParam(required = false) String foldersManagers, @RequestParam(required = false) String settingsManagers) {
+    public RedirectView editSettings(@RequestParam String themesManagers, @RequestParam String rolesManagers,
+                                     @RequestParam String foldersManagers, @RequestParam String settingsManagers,
+                                     @RequestParam String globalManagers) {
         FenixFramework.atomic(() -> {
-            if (DynamicGroup.get("managers").isMember(Authenticate.getUser())) {
-                CmsSettings settings = CmsSettings.getInstance().getInstance();
-                settings.ensureCanManageGlobalPermissions();
-                settings.setThemesManagers(group(themesManagers));
-                settings.setRolesManagers(group(rolesManagers));
-                settings.setFoldersManagers(group(foldersManagers));
-                settings.setSettingsManagers(group(settingsManagers));
+            CmsSettings settings = CmsSettings.getInstance().getInstance();
+            settings.ensureCanManageCms();
+            settings.setThemesManagers(group(themesManagers));
+            settings.setRolesManagers(group(rolesManagers));
+            settings.setFoldersManagers(group(foldersManagers));
+            settings.setSettingsManagers(group(settingsManagers));
+            if(group(globalManagers).getMembers().count()>0){
+                settings.setGlobalManagers(group(globalManagers));
             }
         });
         return new RedirectView("/cms/sites", true);

@@ -38,21 +38,26 @@ public class AdminSettings {
 
   @RequestMapping
   public String view(Model model) {
-    CmsSettings.getInstance().ensureCanManageGlobalPermissions();
+    CmsSettings.getInstance().ensureCanManageCms();
     model.addAttribute("cmsSettings", Bennu.getInstance().getCmsSettings());
     return "fenixedu-cms/settings";
   }
 
   @RequestMapping(method = RequestMethod.POST)
   public RedirectView view(@RequestParam String themesManagers, @RequestParam String rolesManagers,
-                     @RequestParam String foldersManagers, @RequestParam String settingsManagers) {
+                     @RequestParam String foldersManagers, @RequestParam String settingsManagers,
+                     @RequestParam String globalManagers) {
     FenixFramework.atomic(()->{
       CmsSettings settings = CmsSettings.getInstance().getInstance();
-      settings.ensureCanManageGlobalPermissions();
+      settings.ensureCanManageCms();
       settings.setThemesManagers(group(themesManagers));
       settings.setRolesManagers(group(rolesManagers));
       settings.setFoldersManagers(group(foldersManagers));
       settings.setSettingsManagers(group(settingsManagers));
+      if(group(globalManagers).getMembers().count()>0){
+        settings.setGlobalManagers(group(globalManagers));
+      }
+      
     });
     return new RedirectView("/cms/settings", true);
   }

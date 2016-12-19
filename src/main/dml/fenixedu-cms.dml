@@ -210,9 +210,18 @@ relation CmsSettingsHasRoot {
   protected .org.fenixedu.bennu.core.domain.Bennu playsRole bennu;
 }
 
-relation ThemesHaveManagers {
+
+
+relation CmsHasManagers {
     protected CmsSettings playsRole;
     .org.fenixedu.bennu.core.domain.groups.PersistentGroup playsRole themesManagers {
+        multiplicity 1..1;
+    }
+}
+
+relation ThemesHaveManagers {
+    protected CmsSettings playsRole;
+    .org.fenixedu.bennu.core.domain.groups.PersistentGroup playsRole globalManagers {
         multiplicity 1..1;
     }
 }

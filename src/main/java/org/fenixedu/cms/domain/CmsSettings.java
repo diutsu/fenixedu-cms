@@ -19,39 +19,42 @@
 package org.fenixedu.cms.domain;
 
 import org.fenixedu.bennu.core.domain.Bennu;
-import org.fenixedu.bennu.core.domain.groups.PersistentDynamicGroup;
 import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.cms.exceptions.CmsDomainException;
 
 public class CmsSettings extends CmsSettings_Base {
 
-    public CmsSettings() {
-        PersistentDynamicGroup managers = (PersistentDynamicGroup) Group.parse("#managers").toPersistentGroup();
-        setFoldersManagers(managers);
-        setRolesManagers(managers);
-        setSettingsManagers(managers);
-        setThemesManagers(managers);
+    private CmsSettings() {
+        setFoldersManagers(Group.nobody().toPersistentGroup());
+        setRolesManagers(Group.nobody().toPersistentGroup());
+        setThemesManagers(Group.nobody().toPersistentGroup());
+        setSettingsManagers(Group.nobody().toPersistentGroup());
+        setGlobalManagers(Group.nobody().toPersistentGroup());
     }
 
     public boolean canManageFolders() {
-        return getFoldersManagers().isMember(Authenticate.getUser());
+        return getGlobalManagers().isMember(Authenticate.getUser()) ||
+            getFoldersManagers().isMember(Authenticate.getUser());
     }
 
     public boolean canManageRoles() {
-        return getRolesManagers().isMember(Authenticate.getUser());
+        return getGlobalManagers().isMember(Authenticate.getUser()) ||
+            getRolesManagers().isMember(Authenticate.getUser());
     }
 
     public boolean canManageSettings() {
-        return getSettingsManagers().isMember(Authenticate.getUser());
+        return getGlobalManagers().isMember(Authenticate.getUser()) ||
+            getSettingsManagers().isMember(Authenticate.getUser());
     }
 
     public boolean canManageThemes() {
-        return getThemesManagers().isMember(Authenticate.getUser());
+        return getGlobalManagers().isMember(Authenticate.getUser()) |
+            getThemesManagers().isMember(Authenticate.getUser());
     }
 
-    public boolean canManageGloabalPermissions() {
-        return Group.parse("#managers").isMember(Authenticate.getUser());
+    public boolean canManageCms() {
+        return getGlobalManagers().isMember(Authenticate.getUser());
     }
 
     public void ensureCanManageFolders() {
@@ -78,8 +81,8 @@ public class CmsSettings extends CmsSettings_Base {
         }
     }
 
-    public void ensureCanManageGlobalPermissions() {
-        if (!canManageGloabalPermissions()) {
+    public void ensureCanManageCms() {
+        if (!canManageCms()) {
             throw CmsDomainException.forbiden();
         }
     }
