@@ -1,6 +1,5 @@
 package org.fenixedu.cms.api;
 
-import com.flickr4java.flickr.auth.Auth;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,7 +10,6 @@ import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.cms.api.bean.SiteBean;
 import org.fenixedu.cms.api.json.SiteAdapter;
 import org.fenixedu.cms.domain.CMSTheme;
-import org.fenixedu.cms.domain.CmsSettings;
 import org.fenixedu.cms.domain.CmsTestUtils;
 import org.fenixedu.cms.domain.DefaultRoles;
 import org.fenixedu.cms.domain.PermissionsArray;

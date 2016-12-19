@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.fenixedu</groupId>
-        <artifactId>fenix-framework-project</artifactId>
-        <version>2.3.0</version>
-    </parent>
+	<parent>
+		<groupId>org.fenixedu</groupId>
+		<artifactId>fenix-framework-project</artifactId>
+		<version>2.4.0-SNAPSHOT</version>
+	</parent>
 
     <artifactId>fenixedu-cms</artifactId>
     <version>3.0.0-SNAPSHOT</version>
@@ -190,7 +190,39 @@
             <artifactId>tika-core</artifactId>
             <version>${version.org.apache.tika.tika-core}</version>
         </dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+			<version>4.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fenixedu</groupId>
+			<artifactId>bennu-test</artifactId>
+			<version>4.0.0.RC2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.test-framework</groupId>
+			<artifactId>jersey-test-framework-core</artifactId>
+			<version>2.10.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
+			<artifactId>jersey-test-framework-provider-inmemory</artifactId>
+			<version>2.10.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>2.10.1</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
 
     <repositories>
         <repository>
