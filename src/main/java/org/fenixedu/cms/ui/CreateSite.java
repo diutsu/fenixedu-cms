@@ -47,12 +47,11 @@ public class CreateSite {
             @RequestParam(required = false, defaultValue = "false") boolean embedded,
             @RequestParam(required = false) Set<String> roles,
             @RequestParam(required = false) String folder, RedirectAttributes redirectAttributes) {
-        roles.forEach(r->System.out.println(r));
         if (name.isEmpty()) {
             redirectAttributes.addFlashAttribute("emptyName", true);
             return new RedirectView("/cms/sites/new", true);
         } else {
-            createSite(Sanitization.strictSanitize(name), Sanitization.sanitize(name), false, template, folder, embedded,
+            createSite(Sanitization.strictSanitize(name), Sanitization.sanitize(description), false, template, folder, embedded,
                 theme, roles);
             return new RedirectView("/cms/sites/", true);
         }
@@ -72,8 +71,7 @@ public class CreateSite {
         site.setPublished(published);
         
         roles.forEach(role -> new Role(FenixFramework.getDomainObject(role),site));
-            
-        ofNullable(template).filter(t -> !Strings.isNullOrEmpty(t)).map(Site::templateFor).ifPresent(t -> t.makeIt(site));
+        
         ofNullable(themeType).filter(t -> !Strings.isNullOrEmpty(t)).map(CMSTheme::forType).ifPresent(site::setTheme);
 
         SiteActivity.createdSite(site, Authenticate.getUser());

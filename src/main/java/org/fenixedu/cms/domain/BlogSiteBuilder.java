@@ -18,6 +18,7 @@
  */
 package org.fenixedu.cms.domain;
 
+import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.cms.domain.component.*;
 import org.fenixedu.commons.i18n.I18N;
@@ -26,23 +27,35 @@ import org.fenixedu.commons.i18n.LocalizedString;
 /**
  * SiteTemplate for that is an example of a blog having a dummy content.
  */
-@RegisterSiteTemplate(name = "Blog", description = "A simple blog", type = "blog")
-public class BlogTemplate implements SiteTemplate {
+public class BlogSiteBuilder extends BlogSiteBuilder_Base {
 
     private Post about;
-
-    /**
-     * Populates a site with the structure of a blog.
-     * Including some pages, menus, posts and categories.
-     *
-     * @param site the site to be populated.
-     */
+    
+    
+    public static BlogSiteBuilder getInstance(){
+        return Bennu.getInstance().getSiteBuildersSet().stream().filter(siteBuilder -> siteBuilder instanceof BlogSiteBuilder)
+                .map(siteBuilder -> (BlogSiteBuilder) siteBuilder)
+                .findFirst().orElseGet(()->new BlogSiteBuilder());
+    }
+    
     @Override
-    public void makeIt(Site site) {
-
-        site.setTheme(CMSTheme.forType("cms-default-theme"));
+    public boolean isSystemBuilder(){return true;}
+    
+    
+    private BlogSiteBuilder() {
+        super();
+        this.setSlug(BlogSiteBuilder.class.getSimpleName());
+        Bennu.getInstance().getSiteBuildersSet().add(this);
+    }
+    
+    @Override
+    public Site create(LocalizedString name, LocalizedString description, String slug) {
+        Site site = super.create(name,description, slug);
+        
+        site.setTheme(getTheme());
         makeCategory(site);
         makePosts(site);
+                
         Page homepage = makeHomepage(site);
         Page about = makeAboutPage(site);
         Page postPage = makePostPage(site);
@@ -67,7 +80,8 @@ public class BlogTemplate implements SiteTemplate {
         makeMenu.add(menuItem);
 
         site.setInitialPage(homepage);
-
+        
+        return site;
     }
 
     private void makeCategory(Site site) {

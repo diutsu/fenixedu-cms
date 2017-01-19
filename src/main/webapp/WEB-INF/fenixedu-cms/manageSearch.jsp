@@ -27,7 +27,7 @@ ${portal.toolkit()}
 <div class="page-header">
     <h1>Content Managment
           <c:if test="${cmsSettings.canManageSettings()}">
-          <button type="button" class="btn btn-link" data-target="#sites-settings" data-toggle="modal"><i class="glyphicon glyphicon-wrench"></i></button>
+          <button type="button" class="btn btn-link" data-target="#sites-settings" data-toggle="modal"><i class="glyphicon glyphicon-wrench"></i> Settings</button>
           </c:if>
           <small>
 

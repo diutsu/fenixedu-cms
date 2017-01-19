@@ -24,6 +24,7 @@
 
 <c:if test="${cmsSettings.canManageSettings()}">
     <modular:intersect location="sites.manage" position="creation.modals">
+        <modular:arg key="csrfField" value="${csrf.field()}"></modular:arg>
     </modular:intersect>
     <div class="modal fade" id="sites-settings">
         <div class="modal-dialog">
@@ -500,7 +501,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Theme</label>
+                            <label for="inputEmail3" class="col-sm-2 control-label">Builder</label>
 
                             <div class="col-sm-10">
                                 <select name="theme" id="" class="form-control">
@@ -542,11 +543,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="embedded" class="col-sm-2 control-label"><spring:message code="label.embedded"/></label>
+                            <label for="embeded" class="col-sm-2 control-label"><spring:message code="label.embedded"/></label>
                             <div class="col-sm-2">
                                 <div class="switch switch-success">
-                                    <input type="checkbox" id="embeded" value="true" \>
-                                    <label for="embeded">Embedded</label>
+                                    <label for="embeded"><input type="checkbox" id="embeded" value="true" \>Embedded</label>
                                 </div>
                             </div>
                         </div>
@@ -554,13 +554,16 @@
                         <div class="form-group">
                             <label for="roles" class="col-sm-2 control-label"><spring:message code="label.roles"/></label>
                             <div class="col-sm-10">
+                                <div class="row">
                                 <c:forEach items="${roles}" var="template">
-                                    <div class="col-sm-2">
-                                        <label for="roles">${template.name.content}<input type="checkbox" name="roles"
-                                                                                          value="${template.externalId}">
+                                <div class="col-sm-3">
+                                        <label for="roles-${template.name.content}">
+                                            <input type="checkbox" name="roles" value="${template.externalId}">
+                                            ${template.name.content}
                                         </label>
-                                    </div>
+                                </div>
                                 </c:forEach>
+                            </div>
                             </div>
 
                         </div>
