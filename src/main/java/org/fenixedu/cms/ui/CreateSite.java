@@ -32,6 +32,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
 
+import javax.swing.text.html.Option;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Optional.ofNullable;
@@ -73,7 +76,8 @@ public class CreateSite {
             site.updateMenuFunctionality();
             site.setPublished(published);
     
-            roles.forEach(role -> new Role(FenixFramework.getDomainObject(role), site));
+            ofNullable(roles).ifPresent(rolesSet ->
+                    rolesSet.forEach(role -> new Role(FenixFramework.getDomainObject(role), site)));
     
             ofNullable(themeType).filter(t -> !Strings.isNullOrEmpty(t)).map(CMSTheme::forType).ifPresent(site::setTheme);
     
